@@ -1,4 +1,4 @@
-package com.wechat.sell.dao;
+package com.wechat.sell.controller;
 
 import com.wechat.sell.VO.ProductInfoVO;
 import com.wechat.sell.VO.ProductVO;
