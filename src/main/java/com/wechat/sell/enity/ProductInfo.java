@@ -1,6 +1,7 @@
 package com.wechat.sell.enity;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -10,6 +11,7 @@ import java.util.Date;
 
 @Entity
 @Data
+@DynamicUpdate
 public class ProductInfo implements Serializable {
     private static final long serialVersionUID = 1396067774818463917L;
     @Id
