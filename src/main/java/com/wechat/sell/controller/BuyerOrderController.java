@@ -1,8 +1,11 @@
 package com.wechat.sell.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wechat.sell.VO.ResultVO;
 import com.wechat.sell.convert.OrderForm2OrderDTOConverter;
 import com.wechat.sell.dto.OrderDTO;
+import com.wechat.sell.enity.OrderDetail;
 import com.wechat.sell.form.OrderForm;
 import com.wechat.sell.service.BuyerService;
 import com.wechat.sell.service.OrderService;
@@ -19,6 +22,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,14 +44,25 @@ public class BuyerOrderController {
             log.error("【创建订单】参数不正确, orderForm={}", orderForm);
 
         }
-        OrderDTO orderDTO= OrderForm2OrderDTOConverter.convert(orderForm);
+        //前端传值，后端接受拼接订单信息
+        OrderDTO orderDTO=new OrderDTO();
+        orderDTO.setBuyerName(orderForm.getName());
+        orderDTO.setBuyerPhone(orderForm.getPhone());
+        orderDTO.setBuyerAddress(orderForm.getAddress());
+        orderDTO.setBuyerOpenid(orderForm.getOpenid());
+        List<OrderDetail>orderDetailList=new ArrayList<>();
+        Gson gson=new Gson();//处理前端传来的json格式的集合
+        orderDetailList=gson.fromJson(orderForm.getItems(),new TypeToken<List<OrderDTO>>(){}.getType());
+        orderDTO.setOrderDetailList(orderDetailList);
+        //orderDTO.setOrderDetailList(orderForm.getItems());
+        //OrderDTO orderDTO= OrderForm2OrderDTOConverter.convert(orderForm);
         if (CollectionUtils.isEmpty(orderDTO.getOrderDetailList())){
             log.error("【创建订单】购物车不能为空");
         }
         OrderDTO createResult=orderService.create(orderDTO);
         Map<String,String>map=new HashMap<>();
         map.put("orderId",createResult.getOrderId());
-        return ResultVOUtil.success(map);
+        return ResultUtil.success(map);
     }
 
     //订单列表
