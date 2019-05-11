@@ -1,6 +1,8 @@
 package com.wechat.sell.service.impl;
 
 import com.wechat.sell.dto.OrderDTO;
+import com.wechat.sell.enums.ResultEnum;
+import com.wechat.sell.exception.SellException;
 import com.wechat.sell.service.BuyerService;
 import com.wechat.sell.service.OrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,7 @@ public class BuyerServiceImpl implements BuyerService {
 
     @Autowired
     private OrderService orderService;
+
     //用户验证
     private OrderDTO checkOrderOwner(String openid,String orderId){
         OrderDTO orderDTO=orderService.findOne(orderId);
@@ -22,6 +25,7 @@ public class BuyerServiceImpl implements BuyerService {
         //判断订单所属
         if(!orderDTO.getBuyerOpenid().equals(openid)){
             log.error("【查询订单】订单的openid不一致. openid={}, orderDTO={}", openid, orderDTO);
+            throw new SellException( ResultEnum.ORDER_OWNER_ERROR);
         }
         return orderDTO;
     }
@@ -37,7 +41,9 @@ public class BuyerServiceImpl implements BuyerService {
         OrderDTO orderDTO=checkOrderOwner(openid,orderId);
         if(orderDTO==null){
             log.error("【取消订单】查不到改订单, orderId={}", orderId);
+            throw new SellException(ResultEnum.ORDER_NOT_EXIST);
         }
-        return orderService.cancel(orderDTO);
+        orderService.cancel( orderDTO );
+        return orderDTO;
     }
 }

@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Data
-@DynamicUpdate
+
 public class OrderDetail {
     @Id
     private String detailId;
@@ -27,7 +27,7 @@ public class OrderDetail {
     /** 商品小图. */
     private String productIcon;
     /** 创建时间. */
-    private Date createTime;
+    //private Date createTime;
     /** 更新时间. */
-    private Date updateTime;
+    //private Date updateTime;
 }

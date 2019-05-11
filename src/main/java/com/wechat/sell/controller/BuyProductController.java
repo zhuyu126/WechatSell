@@ -7,7 +7,7 @@ import com.wechat.sell.enity.ProductCategory;
 import com.wechat.sell.enity.ProductInfo;
 import com.wechat.sell.service.CategoryService;
 import com.wechat.sell.service.ProductService;
-import com.wechat.sell.utils.ResultUtil;
+import com.wechat.sell.utils.ResultVOUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,6 +70,6 @@ public class BuyProductController {
         //resultVO.setCode(0);
         //resultVO.setMsg("成功");
 
-        return ResultUtil.success(productVOList);
+        return ResultVOUtil.success(productVOList);
     }
 }

@@ -4,6 +4,8 @@ import com.wechat.sell.dao.ProductInfoDAO;
 import com.wechat.sell.dto.CartDTO;
 import com.wechat.sell.enity.ProductInfo;
 import com.wechat.sell.enums.ProductStatusEnum;
+import com.wechat.sell.enums.ResultEnum;
+import com.wechat.sell.exception.SellException;
 import com.wechat.sell.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -13,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Service("productService")
+@Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
@@ -46,12 +48,15 @@ public class ProductServiceImpl implements ProductService {
             ProductInfo productInfo=productInfoDAO.findOne(cartDTO.getProductId());
             if(productInfo==null){
                 //没有该商品
+                throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
             }
+            //减库存
             Integer result=productInfo.getProductStock()-cartDTO.getProductQuantity();
             if(result<0){
                 //商品库存不足
+                throw new SellException(ResultEnum.PRODUCT_STOCK_ERROR);
             }
-            productInfo.setProductStatus(result);
+            productInfo.setProductStock(result);
             productInfoDAO.save(productInfo);
         }
     }
@@ -64,9 +69,10 @@ public class ProductServiceImpl implements ProductService {
             ProductInfo productInfo=productInfoDAO.findOne(cartDTO.getProductId());
             if(productInfo==null){
                 //没有该商品
+                throw new SellException(ResultEnum.PRODUCT_NOT_EXIST);
             }
             Integer result=productInfo.getProductStock()+cartDTO.getProductQuantity();
-            productInfo.setProductStatus(result);
+            productInfo.setProductStock(result);
             productInfoDAO.save(productInfo);
         }
     }
