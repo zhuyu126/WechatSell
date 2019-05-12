@@ -13,6 +13,7 @@ import com.wechat.sell.enums.PayStatus;
 import com.wechat.sell.enums.ResultEnum;
 import com.wechat.sell.exception.SellException;
 import com.wechat.sell.service.OrderService;
+import com.wechat.sell.service.PayService;
 import com.wechat.sell.service.ProductService;
 import com.wechat.sell.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderDetailDAO orderDetailDAO;
     @Autowired
     private OrderMasterDAO orderMasterDAO;
+    @Autowired
+    private PayService payService;
 
     @Override
     @Transactional
@@ -143,7 +146,8 @@ public class OrderServiceImpl implements OrderService {
 
         //如果已支付, 需要退款
         if(orderDTO.getPayStatus().equals(PayStatus.SUCCESS)){
-            //todo 退款
+            //退款
+            payService.refund(orderDTO);
         }
 
         return orderDTO;
