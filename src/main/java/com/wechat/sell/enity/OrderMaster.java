@@ -1,7 +1,8 @@
 package com.wechat.sell.enity;
 
-import com.wechat.sell.enums.OrderStatus;
-import com.wechat.sell.enums.PayStatus;
+
+import com.wechat.sell.enums.OrderStatusEnum;
+import com.wechat.sell.enums.PayStatusEnum;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -28,9 +29,9 @@ public class OrderMaster {
     /** 订单总金额. */
     private BigDecimal orderAmount;
     /** 订单状态, 默认为0新下单. */
-    private Integer orderStatus= OrderStatus.NEW.getCode();
+    private Integer orderStatus= OrderStatusEnum.NEW.getCode();
     /** 支付状态, 默认为0未支付. */
-    private Integer payStatus= PayStatus.WAIT.getCode();
+    private Integer payStatus= PayStatusEnum.WAIT.getCode();
     /** 创建时间. */
     private Date createTime;
     /** 更新时间. */

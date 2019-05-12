@@ -2,8 +2,8 @@ package com.wechat.sell.service.impl;
 
 import com.wechat.sell.dto.OrderDTO;
 import com.wechat.sell.enity.OrderDetail;
-import com.wechat.sell.enums.OrderStatus;
-import com.wechat.sell.enums.PayStatus;
+import com.wechat.sell.enums.OrderStatusEnum;
+import com.wechat.sell.enums.PayStatusEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -77,20 +77,27 @@ public class OrderServiceImplTest {
     public void cancel() {
         OrderDTO orderDTO = orderService.findOne(ORDER_ID);
         OrderDTO result = orderService.cancel(orderDTO);
-        Assert.assertEquals( OrderStatus.CANCEL.getCode(), result.getOrderStatus());
+        Assert.assertEquals( OrderStatusEnum.CANCEL.getCode(), result.getOrderStatus());
     }
 
     @Test
     public void finished() {
         OrderDTO orderDTO = orderService.findOne(ORDER_ID);
         OrderDTO result = orderService.finished(orderDTO);
-        Assert.assertEquals(OrderStatus.FINISHED.getCode(), result.getOrderStatus());
+        Assert.assertEquals(OrderStatusEnum.FINISHED.getCode(), result.getOrderStatus());
     }
 
     @Test
     public void paid() {
         OrderDTO orderDTO = orderService.findOne(ORDER_ID);
         OrderDTO result = orderService.paid(orderDTO);
-        Assert.assertEquals( PayStatus.SUCCESS.getCode(), result.getPayStatus());
+        Assert.assertEquals( PayStatusEnum.SUCCESS.getCode(), result.getPayStatus());
+    }
+    @Test
+    public void findAllList(){
+        PageRequest request = new PageRequest(1,2);
+        Page<OrderDTO> orderDTOPage = orderService.findAllList( request );
+        Assert.assertNotEquals(0, orderDTOPage.getTotalElements());
+        Assert.assertTrue("查询所有订单记录",orderDTOPage.getTotalElements()>0);
     }
 }

@@ -8,8 +8,9 @@ import com.wechat.sell.dto.OrderDTO;
 import com.wechat.sell.enity.OrderDetail;
 import com.wechat.sell.enity.OrderMaster;
 import com.wechat.sell.enity.ProductInfo;
-import com.wechat.sell.enums.OrderStatus;
-import com.wechat.sell.enums.PayStatus;
+
+import com.wechat.sell.enums.OrderStatusEnum;
+import com.wechat.sell.enums.PayStatusEnum;
 import com.wechat.sell.enums.ResultEnum;
 import com.wechat.sell.exception.SellException;
 import com.wechat.sell.service.OrderService;
@@ -75,8 +76,8 @@ public class OrderServiceImpl implements OrderService {
         orderDTO.setOrderId(orderId);
         BeanUtils.copyProperties(orderDTO,orderMaster);
         orderMaster.setOrderAmount(orderAmount);
-        orderMaster.setOrderStatus(OrderStatus.NEW.getCode());
-        orderMaster.setPayStatus(PayStatus.WAIT.getCode());
+        orderMaster.setOrderStatus(OrderStatusEnum.NEW.getCode());
+        orderMaster.setPayStatus( PayStatusEnum.WAIT.getCode());
         orderMasterDAO.save(orderMaster);
 
         //4、扣库存//可能存在并发 超卖
@@ -119,13 +120,12 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO cancel(OrderDTO orderDTO) {
         OrderMaster orderMaster=new OrderMaster();
         //判断订单状态
-        if (!orderDTO.getOrderStatus().equals(OrderStatus.NEW.getCode())){
-            //订单状态不可改
+        if (!orderDTO.getOrderStatus().equals( OrderStatusEnum.NEW.getCode())){
             log.error("【取消订单】订单状态不正确, orderId={}, orderStatus={}", orderDTO.getOrderId(), orderDTO.getOrderStatus());
             throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
         }
         //修改订单状态
-        orderDTO.setOrderStatus(OrderStatus.CANCEL.getCode());
+        orderDTO.setOrderStatus(OrderStatusEnum.CANCEL.getCode());
         BeanUtils.copyProperties(orderDTO,orderMaster);
         OrderMaster updateResult = orderMasterDAO.save( orderMaster);
         if(updateResult==null){
@@ -145,7 +145,7 @@ public class OrderServiceImpl implements OrderService {
         productService.increaseStock(cartDTOList);
 
         //如果已支付, 需要退款
-        if(orderDTO.getPayStatus().equals(PayStatus.SUCCESS)){
+        if(orderDTO.getPayStatus().equals(PayStatusEnum.SUCCESS)){
             //退款
             payService.refund(orderDTO);
         }
@@ -158,14 +158,14 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO finished(OrderDTO orderDTO) {
         OrderMaster orderMaster=new OrderMaster();
         //判断订单状态
-        if (!orderDTO.getOrderStatus().equals(OrderStatus.NEW.getCode())){
+        if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())){
             //订单状态不可改
             log.error("【完结订单】订单状态不正确, orderId={}, orderStatus={}", orderDTO.getOrderId(), orderDTO.getOrderStatus());
             throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
         }
         //判断是否支付
         //修改订单状态
-        orderDTO.setOrderStatus(OrderStatus.FINISHED.getCode());
+        orderDTO.setOrderStatus(OrderStatusEnum.FINISHED.getCode());
         BeanUtils.copyProperties(orderDTO,orderMaster);
         OrderMaster updateResult = orderMasterDAO.save(orderMaster);
         if(updateResult==null){
@@ -179,19 +179,19 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrderDTO paid(OrderDTO orderDTO) {
-        if (!orderDTO.getOrderStatus().equals(OrderStatus.NEW.getCode())){
+        if (!orderDTO.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())){
             //订单状态不可改
             log.error("【订单支付完成】订单状态不正确, orderId={}, orderStatus={}", orderDTO.getOrderId(), orderDTO.getOrderStatus());
             throw new SellException(ResultEnum.ORDER_STATUS_ERROR);
         }
-        if (!orderDTO.getPayStatus().equals(PayStatus.WAIT.getCode())){
+        if (!orderDTO.getPayStatus().equals(PayStatusEnum.WAIT.getCode())){
             //订单状态不可改
             log.error("【订单支付完成】订单状态不正确, orderId={}, orderStatus={}", orderDTO.getOrderId(), orderDTO.getOrderStatus());
             throw new SellException(ResultEnum.ORDER_PAY_STATUS_ERROR);
         }
         //修改支付状态
         OrderMaster orderMaster=new OrderMaster();
-        orderDTO.setPayStatus(PayStatus.SUCCESS.getCode());
+        orderDTO.setPayStatus(PayStatusEnum.SUCCESS.getCode());
         BeanUtils.copyProperties(orderDTO,orderMaster);
         OrderMaster updateResult = orderMasterDAO.save( orderMaster);
         if(updateResult==null){
@@ -200,5 +200,12 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return orderDTO;
+    }
+
+    @Override
+    public Page<OrderDTO> findAllList(Pageable pageable) {
+        Page<OrderMaster> orderMasterPage = orderMasterDAO.findAll( pageable );
+        List<OrderDTO>orderDTOList= OrderMaster2OrderDTOConverter.convert(orderMasterPage.getContent());
+        return new PageImpl<>(orderDTOList,pageable,orderMasterPage.getTotalElements());
     }
 }

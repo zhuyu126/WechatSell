@@ -1,10 +1,14 @@
 package com.wechat.sell.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wechat.sell.enity.OrderDetail;
-import com.wechat.sell.enums.OrderStatus;
-import com.wechat.sell.enums.PayStatus;
+
+import com.wechat.sell.enums.OrderStatusEnum;
+
+import com.wechat.sell.enums.PayStatusEnum;
+import com.wechat.sell.utils.EnumUtil;
 import com.wechat.sell.utils.serializer.Date2LongSerializer;
 import lombok.Data;
 
@@ -39,4 +43,13 @@ public class OrderDTO {
     private Date updateTime;
 
     List<OrderDetail>orderDetailList;
+
+    @JsonIgnore
+    public OrderStatusEnum getOrderStatusEnum(){
+        return EnumUtil.getByCode(orderStatus,OrderStatusEnum.class);
+    }
+    @JsonIgnore
+    public PayStatusEnum getPayStatusEnum(){
+        return EnumUtil.getByCode(payStatus,PayStatusEnum.class);
+    }
 }
