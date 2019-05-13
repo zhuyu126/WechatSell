@@ -1,5 +1,8 @@
 package com.wechat.sell.enity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.wechat.sell.enums.ProductStatusEnum;
+import com.wechat.sell.utils.EnumUtil;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -11,7 +14,7 @@ import java.util.Date;
 
 @Entity
 @Data
-
+@DynamicUpdate
 public class ProductInfo implements Serializable {
     private static final long serialVersionUID = 1396067774818463917L;
     @Id
@@ -31,6 +34,11 @@ public class ProductInfo implements Serializable {
     /** 类目编号. */
     private Integer categoryType;
 
-    //private Date createTime;
-    //private Date updateTime;
+    private Date createTime;
+    private Date updateTime;
+
+    @JsonIgnore
+    public ProductStatusEnum getProductStatusEnum(){
+        return EnumUtil.getByCode(productStatus,ProductStatusEnum.class);
+    }
 }
