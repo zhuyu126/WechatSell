@@ -12,6 +12,7 @@ import com.wechat.sell.utils.KeyUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -48,7 +49,7 @@ public class SellerProductController {
     public ModelAndView list(@RequestParam(value = "page",defaultValue = "1") Integer page,
                              @RequestParam(value = "size",defaultValue = "10") Integer size,
                              Map<String,Object> map){
-        PageRequest pageRequest=new PageRequest(page-1,size);//page从第0页开始查询
+        PageRequest pageRequest=PageRequest.of(page-1,size);//page从第0页开始查询
         Page<ProductInfo> productInfoPage=productService.findAll(pageRequest);
         map.put("productInfoPage",productInfoPage);
         map.put("currentPage",page);
@@ -107,6 +108,7 @@ public class SellerProductController {
      * @return
      */
     @PostMapping("/save")
+    @CacheEvict(cacheNames = "product",allEntries = true,beforeInvocation = true)
     public ModelAndView save(@Valid ProductForm form,
                              BindingResult bindingResult,
                              Map<String,Object>map){

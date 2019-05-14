@@ -8,12 +8,16 @@ import org.hibernate.annotations.DynamicUpdate;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @DynamicUpdate
 @Data
-public class ProductCategory {
+public class ProductCategory implements Serializable {
+
+    private static final long serialVersionUID= -3063050997551563398L;
+
     @Id
     @GeneratedValue
     /**类目id*/

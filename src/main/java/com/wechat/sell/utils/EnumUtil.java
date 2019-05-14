@@ -1,7 +1,7 @@
 package com.wechat.sell.utils;
 
 import com.wechat.sell.enums.CodeEnum;
-import com.wechat.sell.enums.OrderStatus;
+
 
 public class EnumUtil {
     public static <T extends CodeEnum>T getByCode(Integer code, Class<T> enumClass){

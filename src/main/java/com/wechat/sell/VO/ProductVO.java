@@ -10,8 +10,9 @@ import java.util.List;
  * 商品(包含类目)
  */
 @Data
-public class ProductVO  {
-    //private static final long serialVersionUID= 4573919477511580019L;
+public class ProductVO implements Serializable{
+
+    private static final long serialVersionUID= -4027921186073014465L;
 
     @JsonProperty("name")
     private String categoryName;

@@ -98,7 +98,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderDTO findOne(String orderId) {
-        OrderMaster orderMaster=orderMasterDAO.findOne(orderId);
+        OrderMaster orderMaster=orderMasterDAO.findById(orderId).orElse(null);
         if(orderMaster==null){
             //订单不存在
             throw new SellException( ResultEnum.ORDER_NOT_EXIST);

@@ -9,9 +9,9 @@ import java.io.Serializable;
  * Http请求返回的最外层对象
  */
 @Data
-public class ResultVO<T>  {
+public class ResultVO<T> implements Serializable{
 
-    //private static final long serialVersionUID= 5099264180706582104L;
+    private static final long serialVersionUID= -7713515385691572914L;
     /** 错误码. */
     private Integer code;
     /** 提示信息. */

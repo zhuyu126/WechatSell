@@ -10,8 +10,9 @@ import java.math.BigDecimal;
  * 商品详情
  */
 @Data
-public class ProductInfoVO  {
-    //private static final long serialVersionUID= -583170549117406639L;
+public class ProductInfoVO implements Serializable {
+
+    private static final long serialVersionUID= -635273546736469823L;
 
     @JsonProperty("id")
     private Integer productId;
