@@ -41,4 +41,24 @@ public class ProductInfo implements Serializable {
     public ProductStatusEnum getProductStatusEnum(){
         return EnumUtil.getByCode(productStatus,ProductStatusEnum.class);
     }
+
+    /**
+     * 图片链接加host拼接成完整 url
+     * @param host
+     * @return
+     */
+    public ProductInfo addImageHost(String host) {
+        if (productIcon.startsWith("//") || productIcon.startsWith("http")) {
+            return this;
+        }
+
+        if (!host.startsWith("http")) {
+            host = "//" + host;
+        }
+        if (!host.endsWith("/")) {
+            host = host + "/";
+        }
+        productIcon = host + productIcon;
+        return this;
+    }
 }

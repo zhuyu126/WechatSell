@@ -22,7 +22,7 @@ public class ProductCategoryDAOTest {
 
     @Test
     public void findOneTest(){
-        ProductCategory productCategory=productCategoryDAO.findOne(1);
+        ProductCategory productCategory=productCategoryDAO.findById(1).orElse(null);
         System.out.println(productCategory.toString());
     }
 
@@ -37,7 +37,7 @@ public class ProductCategoryDAOTest {
     @Test
     @Transactional//完全回滚
     public void updateTest() {
-        ProductCategory productCategory = productCategoryDAO.findOne(1);
+        ProductCategory productCategory = productCategoryDAO.findById(1).orElse(null);
         productCategory.setCategoryName("男生最爱");
         productCategoryDAO.save(productCategory);
 

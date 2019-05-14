@@ -39,7 +39,7 @@ public class OrderMasterDAOTest {
 
     @Test
     public void findByBuyerOpenid() {
-        PageRequest request=new PageRequest(0,3);
+        PageRequest request=PageRequest.of(0,3);
         Page<OrderMaster>result=orderMasterDAO.findByBuyerOpenid(OPENID,request);
         Assert.assertNotEquals(0,result.getTotalElements());
         System.out.println(result.getTotalElements()+"******"+result.getContent().size());

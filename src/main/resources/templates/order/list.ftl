@@ -121,7 +121,7 @@
     <script>
         var websocket=null;
         if('webSocket' in window){
-            websocket=new WebSocket('ws://sell.springboot.cn/sell/webSocket');
+             websocket=new WebSocket('ws://sell.springboot.cn/sell/webSocket');
         }else {
             alert('该浏览器不支持webSocket！');
         }
